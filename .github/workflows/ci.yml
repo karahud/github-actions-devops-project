@@ -1,0 +1,36 @@
+
+name: My First CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate Website
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Display welcome message
+        run: echo "Starting GitHub Actions CI Pipeline"
+
+      - name: Check HTML file
+        run: |
+          test -f website/index.html
+          echo "HTML file exists!"
+
+      - name: Validate website content
+        run: |
+          grep -q "Welcome to My DevOps Project!" website/index.html
+          echo "Website validation successful!"
+
