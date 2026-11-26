@@ -31,6 +31,6 @@ jobs:
 
       - name: Validate website content
         run: |
-          grep -q "Welcome to My DevOps Project!" website/index.html
+          grep -q "Welcome to My DevOps Portal!" website/index.html
           echo "Website validation successful!"
 
