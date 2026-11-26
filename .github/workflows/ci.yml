@@ -30,6 +30,12 @@ jobs:
           grep -q "Welcome to My DevOps Portal!" website/index.html
           echo "Website validation successful!"
 
+      - name: Upload website artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-build
+          path: website/
+
   security:
     name: Basic Security Check
     runs-on: ubuntu-latest
@@ -40,7 +46,7 @@ jobs:
 
       - name: Check for private key files
         run: |
-          if find . -type f -name "id_rsa" -o -name "id_ed25519" | grep -q .; then
+          if find . -type f \( -name "id_rsa" -o -name "id_ed25519" \) | grep -q .; then
             echo "Private key file detected!"
             exit 1
           else
@@ -55,3 +61,4 @@ jobs:
     steps:
       - name: Deployment ready
         run: echo "All checks passed. Ready for deployment!"
+
