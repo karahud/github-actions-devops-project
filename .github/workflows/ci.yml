@@ -1,5 +1,5 @@
 
-name: My First CI Pipeline
+name: DevOps Multi-Job CI Pipeline
 
 on:
   push:
@@ -13,6 +13,7 @@ on:
   workflow_dispatch:
 
 jobs:
+
   validate:
     name: Validate Website
     runs-on: ubuntu-latest
@@ -21,16 +22,36 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Display welcome message
-        run: echo "Starting GitHub Actions CI Pipeline"
-
       - name: Check HTML file
-        run: |
-          test -f website/index.html
-          echo "HTML file exists!"
+        run: test -f website/index.html
 
       - name: Validate website content
         run: |
           grep -q "Welcome to My DevOps Portal!" website/index.html
           echo "Website validation successful!"
 
+  security:
+    name: Basic Security Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Check for private key files
+        run: |
+          if find . -type f -name "id_rsa" -o -name "id_ed25519" | grep -q .; then
+            echo "Private key file detected!"
+            exit 1
+          else
+            echo "No matching private key files found."
+          fi
+
+  deploy:
+    name: Deployment Preparation
+    needs: [validate, security]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deployment ready
+        run: echo "All checks passed. Ready for deployment!"
