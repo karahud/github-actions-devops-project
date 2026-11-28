@@ -29,6 +29,16 @@ jobs:
         run: |
           grep -q "Welcome to My DevOps Portal!" website/index.html
           echo "Website validation successful!"
+      - name: Verify GitHub Secret
+        env:
+          DEMO_SECRET: ${{ secrets.DEMO_SECRET }}
+        run: |
+          if [ -n "$DEMO_SECRET" ]; then
+            echo "GitHub Secret is configured successfully!"
+          else
+            echo "GitHub Secret is missing!"
+            exit 1
+          fi
 
       - name: Upload website artifact
         uses: actions/upload-artifact@v4
